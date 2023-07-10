@@ -1,0 +1,50 @@
+{
+  "grantId": "",
+  "googleGrantId": "53ddb155-cacc-41f7-8042-e3b960880ecf",
+  "microsoftGrantId": "e578c7ac-94b3-430d-8174-0d76a6a07350",
+  "calendarId": "primary",
+  "eventId": "",
+  "getQuery": {
+    "limit": 100,
+    "show_cancelled": true,
+    "title": "Cypress Test V3 Final",
+    "description": "Test from Cypress",
+    "location": "Remote",
+    "start": null,
+    "end": null,
+    "metadata_pair": "key1:CypressEventE2E",
+    "expand_recurring": false,
+    "order_by": "start",
+    "busy": null
+  },
+  "postPayload": {
+    "title": "Cypress Test V3 Final",
+    "description": "Test from Cypress",
+    "location": "Remote",
+    "when": {
+      "start_time": 1688911200,
+      "end_time": 1688913000
+    },
+    "participants": [
+      {
+        "email": "kirantestnylas2@gmail.com"
+      }
+    ],
+    "metadata": {
+      "key1": "CypressEventE2E"
+    }
+  },
+  "putPayload": {
+    "title": "Cypress Update Test V3",
+    "description": "Test update from Cypress",
+    "participants": [
+      {
+        "email": "nylasapptest5@nylasoffice365.com"
+      }
+    ]
+  },
+  "rsvpPayload": {
+    "status": "yes",
+    "comment": "Yes, I can make it"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "grantId": "",
+  "googleGrantId": "53ddb155-cacc-41f7-8042-e3b960880ecf",
+  "microsoftGrantId": "e578c7ac-94b3-430d-8174-0d76a6a07350",
+  "draftId": "",
+  "messageId": "",
+  "postPayload": {
+    "subject": "Sending Emails with Cypress",
+    "body": "Nylas API v3 Test!",
+    "to": [
+      {
+        "name": "Kiran Test",
+        "email": "kirantestnylas3@gmail.com"
+      }
+    ]
+  },
+  "putPayload": {
+    "subject": "Update Sending Emails with Cypress",
+    "starred": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "grantId": "",
+  "googleGrantId": "53ddb155-cacc-41f7-8042-e3b960880ecf",
+  "microsoftGrantId": "e578c7ac-94b3-430d-8174-0d76a6a07350",
+  "calendarId": "",
+  "postPayload": {
+    "name": "Cypress Test Calendar",
+    "description": "Test Description",
+    "location": "Chicago",
+    "timezone": "America/Chicago"
+  },
+  "putPayload": {
+    "name": "Update Cypress Test Calendar"
+  }
+}
