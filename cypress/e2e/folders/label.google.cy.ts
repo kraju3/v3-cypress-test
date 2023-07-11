@@ -22,6 +22,24 @@ describe("Folder - Google Labels E2E Test", () => {
       );
     });
 
+    it("folder should update name", function () {
+      const folder = this[folderKey ?? ""];
+
+      const { grantId, putPayload } = this.folderConfig;
+      const payload = {
+        ...putPayload,
+        name: `Update ${folder.name}`,
+      };
+      cy.updateFolder({
+        grantId,
+        folderId: folder.id,
+        payload,
+      });
+      cy.get("@apiResponse").then((res: any) => {
+        cy.compareObjects("Folder", res.body.data, payload);
+      });
+    });
+
     it("should throw an error if try to create the parent folder with the same name", function () {
       const parentFolder = this[folderKey ?? ""];
       const { grantId, postPayload } = this.folderConfig;
@@ -46,13 +64,15 @@ describe("Folder - Google Labels E2E Test", () => {
         );
       });
     });
-
+    /**
+     * TODO file a bug for this
+     */
     it("should allow you to create subfolders and delete them", function () {
       const parentFolder = this[folderKey ?? ""];
       const { grantId, postPayload } = this.folderConfig;
       const newSubFolderPayload = {
         ...postPayload,
-        name: `${postPayload.name}/Test1`,
+        name: `${parentFolder.name}/Test1`,
       };
 
       cy.createFolder({ grantId, payload: newSubFolderPayload });
