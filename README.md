@@ -1,12 +1,18 @@
 # V3 E2E Test
 
+## Getting started
+
+- run `cd e2e && npm i`
+- run `npm run test:dev` - Opens Cypress UI
+
 ## Directory Structure
 
 - `cypress/e2e`
   - All the test files
 - `cypress/support`
   - All the cypress commands by default these files runs first before anything. It injects the Cypress with commands that you can use for your test
-  - Right now, there are separate commands for the major endpoints for our Beta release
+  - Right now, there are separate commands for the major endpoints for our Beta release -`cypress.env.json`
+  - Environment variables (example: cypress.env.sample.json)
 - `cypress/fixtures`
   - File to load in the data. They all share a common pattern.
     - Required Fields
@@ -49,6 +55,7 @@
   4. `it()` blocks that describes the test
      1. Here you will use all the commands that you create under the support folders
 - Sample File
+
   ```
   describe("Send - Google E2E Test", () => {
   let messageKey: ICommonRequestFields["messageKey"] = "googleMessage";
