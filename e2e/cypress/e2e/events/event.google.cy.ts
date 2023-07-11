@@ -91,13 +91,14 @@ describe("Event - Google Event E2E test", () => {
       });
 
       cy.get("@apiResponse").then((response: any) => {
+        const event = response.body.data;
         assert.isTrue(
-          response.body.data.description === payload.description,
+          event.description === payload.description,
           "Updated description is not reflected"
         );
 
         assert.equal(
-          response.body.data.title,
+          event.title,
           payload.title,
           "Updated title is not reflected"
         );
@@ -220,11 +221,12 @@ describe("Event - Google Event E2E test", () => {
       });
 
       cy.get("@apiResponse").then((response: any) => {
+        const event = response.body.data;
         assert.isDefined(
-          response.body.data.conferencing,
+          event.conferencing,
           "Conferencing object should be defined"
         );
-        expect(response.body.data.participants).to.deep.equals(
+        expect(event.participants).to.deep.equals(
           newPayload.participants ?? []
         );
       });
@@ -257,8 +259,9 @@ describe("Event - Google Event E2E test", () => {
 
       it("Check that participants calendar event is read-only", function () {
         cy.get("@apiResponse").then((response: any) => {
+          const event = response.body.data;
           assert.isTrue(
-            response.body.data.read_only === true,
+            event.read_only === true,
             "Participant calendar event is read-only"
           );
         });
@@ -279,8 +282,9 @@ describe("Event - Google Event E2E test", () => {
       });
 
       cy.get("@apiResponse").then((response: any) => {
+        const event = response.body.data;
         assert.isUndefined(
-          response.body.data.conferencing,
+          event.conferencing,
           "Conferencing object should not be present anymore"
         );
       });

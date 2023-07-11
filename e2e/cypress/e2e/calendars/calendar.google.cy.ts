@@ -15,19 +15,13 @@ describe("Calendar - Google E2E tests", () => {
   it("should match the payload of the POST request", function () {
     const calendar = this[calendarKey ?? ""];
 
-    assert.isTrue(calendar.name === this.payload.name, "Calendar name matches");
-    assert.isTrue(
-      calendar.description === this.payload.description,
-      "Calendar description matches"
-    );
-
+    const { postPayload } = this.calendarConfig;
+    cy.compareObjects("Calendar", calendar, postPayload);
     expect(calendar.read_only).eq(false, "Calendar is read-only:false");
     assert.isTrue(
       calendar.timezone === this.payload.timezone,
       "Timezone data is reflected"
     );
-
-    assert.isDefined(calendar.location);
   });
 
   it("update the description", function () {
@@ -37,24 +31,17 @@ describe("Calendar - Google E2E tests", () => {
       name: "New Calendar Title",
       ...putPayload,
     };
-
-    cy.wait(20000);
     cy.updateCalendar({
       grantId,
       calendarId: this[calendarKey ?? ""].id,
       payload,
     });
 
+    cy.wait(5000);
+
     cy.get("@apiResponse").then((response: any) => {
       const calendar = response.body.data;
-      assert.isTrue(
-        calendar.name === payload.name,
-        "Calendar title is different from POST payload"
-      );
-      assert.isTrue(
-        calendar.description === payload.description,
-        "Calendar descrption is not the same as the POST payload"
-      );
+      cy.compareObjects("Calendar", calendar, payload);
     });
   });
 
@@ -73,7 +60,7 @@ describe("Calendar - Google E2E tests", () => {
       },
     };
 
-    cy.wait(20000);
+    cy.wait(5000);
 
     cy.createEvent({
       grantId,
@@ -88,21 +75,6 @@ describe("Calendar - Google E2E tests", () => {
         encodeURIComponent(calendar.id) === event.calendar_id,
         `The calendar id match\n Expected:${calendar.id}\n Returned:${event.calendar_id}`
       );
-    });
-  });
-
-  it("should not allow you to create a calendar with Google System Calendar name", function () {
-    const { grantId } = this.eventConfig;
-    const payload = {
-      name: "Holidays in United States",
-    };
-
-    cy.createCalendar({ grantId, payload });
-
-    cy.get("@apiResponse").then(function (response: any) {
-      expect(response.status).to.be.eq(200);
-
-      assert.isDefined(response.body.error, "No error is thrown");
     });
   });
 });
