@@ -1,12 +1,12 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  projectId: '46feub',
+  projectId: "46feub",
   e2e: {
     setupNodeEvents: (on, config) => {
       const configOverrides: Partial<Cypress.PluginConfigOptions> = {
         video: false,
-        screenshotOnRunFailure: !process.env.CI,
+        screenshotOnRunFailure: false,
         watchForFileChanges: false,
       };
 
