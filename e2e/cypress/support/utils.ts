@@ -11,8 +11,6 @@ function compareObjects(object: string, actual: any, expected: any) {
   });
 }
 
-const OK_STATUSES = [200, 201, 202, 203];
-
 function checkApiResponse(
   response: any,
   flags?: Partial<APIResponseCheckFlags>
@@ -26,10 +24,8 @@ function checkApiResponse(
     defaultOkayFlag = false;
   }
   if (defaultOkayFlag) {
-    expect(response.status).to.be.satisfies(
-      (val: number) => OK_STATUSES.includes(val),
-      "Response status is 200 OK"
-    );
+    expect(response.statusText).to.be.equals("OK");
+    assert.isTrue(response.status < 400);
   }
 
   if (flags?.checkData) {
@@ -37,10 +33,8 @@ function checkApiResponse(
   }
   if (flags?.checkError) {
     assert.isDefined(response.body.data.error, "Error object is present");
-    expect(response.status).to.not.satisfies(
-      (val: number) => OK_STATUSES.includes(val),
-      "Response status is not 200 OK"
-    );
+    expect(response.statusText).to.be.not.equals("OK");
+    cy.log(`@${response.body.data.error}`);
   }
 }
 

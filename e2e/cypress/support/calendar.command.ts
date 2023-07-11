@@ -101,7 +101,7 @@ function calendarTestBeforeEachHook({
       });
     }
 
-    //If no Calendar is present then Create the calendar with 30 minutes from now
+    //If no Calendar is present then Create the calendar
 
     payload = {
       ...postPayload,
