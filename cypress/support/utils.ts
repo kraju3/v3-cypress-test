@@ -23,6 +23,12 @@ function checkApiResponse(
     expect(response.status).to.be.eq(404, "Response status is 404");
     defaultOkayFlag = false;
   }
+
+  if (flags?.checkError) {
+    assert.isDefined(response.body.data.error, "Error object is present");
+    expect(response.statusText).to.be.not.equals("OK");
+    cy.log(`@${response.body.data.error}`);
+  }
   if (defaultOkayFlag) {
     expect(response.statusText).to.be.equals("OK");
     assert.isTrue(response.status < 400);
@@ -30,11 +36,6 @@ function checkApiResponse(
 
   if (flags?.checkData) {
     assert.isDefined(response.body.data, "Request data is present");
-  }
-  if (flags?.checkError) {
-    assert.isDefined(response.body.data.error, "Error object is present");
-    expect(response.statusText).to.be.not.equals("OK");
-    cy.log(`@${response.body.data.error}`);
   }
 }
 

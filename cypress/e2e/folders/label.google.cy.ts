@@ -79,6 +79,12 @@ describe("Folder - Google Labels E2E Test", () => {
       cy.get("@apiResponse").then((res: any) => {
         const subFolder = res.body.data;
         cy.compareObjects("SubFolder", subFolder, newSubFolderPayload);
+        cy.pause();
+        cy.deleteFolder({
+          grantId,
+          folderId: subFolder.id,
+          payload: undefined,
+        });
       });
     });
   });

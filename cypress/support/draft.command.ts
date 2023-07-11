@@ -149,7 +149,6 @@ function draftsTestAfterEachHook({
   cy.get("@draftConfig").then(function (draftConfig: any) {
     const grantId = utils.getGrantId(provider, draftConfig);
     if (this[draftKey]) {
-      //TODO Add logic to updatefor the designated trash folder
       cy.deleteDraft({
         grantId,
         draftId: this[draftKey].id,
