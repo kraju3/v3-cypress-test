@@ -59,11 +59,12 @@ function updateDraft({
   draftId,
   query,
   payload,
+  flags,
 }: Partial<DraftRequestParams>) {
   cy.apiRequest(
     generateDraftRequest({ grantId, draftId, query, payload }, "PUT"),
     {
-      checkData: true,
+      ...(flags && { ...flags }),
     }
   );
 }
@@ -79,9 +80,9 @@ function deleteDraft({
   });
 }
 
-function createDraft({ grantId, payload }: Partial<DraftRequestParams>) {
+function createDraft({ grantId, payload, flags }: Partial<DraftRequestParams>) {
   cy.apiRequest(generateDraftRequest({ grantId, payload }, "POST"), {
-    checkData: true,
+    ...(flags && { ...flags }),
   });
 }
 

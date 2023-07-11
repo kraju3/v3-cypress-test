@@ -25,7 +25,7 @@ describe("Calendar - Google E2E tests", () => {
   });
 
   it("update the description", function () {
-    const { grantId, putPayload } = this.eventConfig;
+    const { grantId, putPayload } = this.calendarConfig;
     const payload = {
       description: "Updated Calendar description",
       name: "New Calendar Title",
@@ -46,7 +46,7 @@ describe("Calendar - Google E2E tests", () => {
   });
 
   it("should allow you to create an Event on that calendar", function () {
-    const { grantId } = this.eventConfig;
+    const { grantId } = this.calendarConfig;
     const calendar = this[calendarKey ?? ""];
 
     const start_time = Math.floor(Date.now() / 1000) + 3600;

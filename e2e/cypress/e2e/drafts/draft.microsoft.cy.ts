@@ -21,7 +21,7 @@ describe("Draft - Google E2E Test", () => {
     });
 
     /***
-     * TODO Change this when the PUT call is done for Microsoft
+     * TODO Change this when the PUT call is done for Microsoft - HTTP 501
      */
     it("should allow me to update the draft and see if the properties match", function () {
       const draft = this[draftKey ?? ""];
@@ -36,8 +36,6 @@ describe("Draft - Google E2E Test", () => {
       cy.get("@apiResponse").then((res: any) => {
         const updatedDraft = res.body.data;
         cy.compareObjects("Draft", updatedDraft, putPayload);
-
-        //check if the id changed or not
         assert.equal(updatedDraft.id, draft.id, "Draft id did not change");
       });
     });

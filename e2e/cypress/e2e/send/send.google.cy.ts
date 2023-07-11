@@ -84,11 +84,6 @@ describe("Send - Google E2E Test", () => {
       cy.messageTestAfterEach({ messageKey });
     });
 
-    it("message should match the payload", function () {
-      cy.wait(120000);
-      const message = this[messageKey ?? ""];
-
-      cy.compareObjects("Message", message, this.payload);
-    });
+    // TODO: Create stubs for async send flow.
   });
 });

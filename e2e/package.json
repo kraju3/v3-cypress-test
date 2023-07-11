@@ -4,8 +4,8 @@
   "description": "sync time test",
   "main": "index.js",
   "scripts": {
-    "test:intereactive": "npx cypress open",
-    "test": "npx cypress run"
+    "test:ui": "npx cypress open",
+    "test:cli": "npx cypress run"
   },
   "author": "",
   "license": "ISC",
