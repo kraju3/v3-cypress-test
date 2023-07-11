@@ -1,10 +1,11 @@
 {
-  "name": "v3-sync",
+  "name": "v3-cypress-test",
   "version": "1.0.0",
   "description": "sync time test",
   "main": "index.js",
   "scripts": {
-    "test": "vitest"
+    "test:intereactive": "npx cypress open",
+    "test": "npx cypress run"
   },
   "author": "",
   "license": "ISC",
