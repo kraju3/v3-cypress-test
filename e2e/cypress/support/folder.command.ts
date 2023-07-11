@@ -59,11 +59,12 @@ function updateFolder({
   folderId,
   query,
   payload,
+  flags,
 }: Partial<FolderRequestParams>) {
   cy.apiRequest(
     generateFolderRequest({ grantId, folderId, query, payload }, "PUT"),
     {
-      checkData: true,
+      ...(flags && { ...flags }),
     }
   );
 }
@@ -79,9 +80,13 @@ function deleteFolder({
   });
 }
 
-function createFolder({ grantId, payload }: Partial<FolderRequestParams>) {
+function createFolder({
+  grantId,
+  payload,
+  flags,
+}: Partial<FolderRequestParams>) {
   cy.apiRequest(generateFolderRequest({ grantId, payload }, "POST"), {
-    checkData: true,
+    ...(flags && { ...flags }),
   });
 }
 

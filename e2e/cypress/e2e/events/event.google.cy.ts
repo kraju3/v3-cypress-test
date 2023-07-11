@@ -104,6 +104,9 @@ describe("Event - Google Event E2E test", () => {
         );
       });
     });
+    /**
+     * TWIMC: Keep in mind the participant should have a grant in your application
+     */
 
     it(
       "should allow the Google participant to rsvp",

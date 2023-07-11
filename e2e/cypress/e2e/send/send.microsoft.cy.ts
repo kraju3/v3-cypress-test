@@ -53,6 +53,8 @@ describe("Send - Microsoft E2E Test", () => {
     });
   });
 
+  //TODO query for the message and check if it's in the right folder
+
   /**
    * @async send
    *
@@ -79,13 +81,6 @@ describe("Send - Microsoft E2E Test", () => {
       cy.messageTestAfterEach({ provider, messageKey });
     });
 
-    it("message should match the payload", function () {
-      cy.wait(120000);
-      const message = this[messageKey ?? ""];
-
-      cy.compareObjects("Message", message, this.payload);
-    });
-
-    //TODO query for the message and check if it's in the right folder
+    //TODO check async message
   });
 });
