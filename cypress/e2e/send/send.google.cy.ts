@@ -1,6 +1,6 @@
 import type { ICommonRequestFields } from "support/utils";
 
-//TODO File a BUG for beta docs to resolve the send payload structure
+//DONE File a BUG for beta docs to resolve the send payload structure
 /**
  *{
     "grant_id": "4610d0ca-f67f-497d-8ed8-4d72d0817be5",

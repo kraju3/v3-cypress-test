@@ -52,6 +52,7 @@ function transformActualObject(actual: any, expected: any) {
     }
     if (!Array.isArray(actual[curr]) && typeof actual[curr] === "object") {
       acc[curr] = transformActualObject(actual[curr], expected[curr]);
+      return acc;
     }
     acc[curr] = actual[curr];
     return acc;

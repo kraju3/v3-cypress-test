@@ -27,7 +27,10 @@
     },
     "participants": [
       {
-        "email": "kirantestnylas2@gmail.com"
+        "email": "kirantestnylas1@gmail.com"
+      },
+      {
+        "email": "kirantestnylas3@gmail.com"
       }
     ],
     "metadata": {
@@ -39,7 +42,7 @@
     "description": "Test update from Cypress",
     "participants": [
       {
-        "email": "nylasapptest5@nylasoffice365.com"
+        "email": "kirantestnylas3@gmail.com"
       }
     ]
   },
