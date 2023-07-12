@@ -89,13 +89,6 @@ function createFolder({
   });
 }
 
-/**
- *
- * @param payload folder POST payload
- * @provider google default
- * @key string key to access it in our tests
- */
-
 function foldersTestBeforeEachHook({
   payload,
   provider = "google",
@@ -149,15 +142,6 @@ function foldersTestBeforeEachHook({
   });
 }
 
-/**
- *
- * @param provider default:google
- * @param folderId // ! This will be the parent folder Id
- *
- *
- * @description test ran after creating a subFolder
- */
-
 function foldersTestAfterEachHook({
   provider = "google",
   folderKey = "googleLabel",
@@ -182,41 +166,6 @@ function foldersTestAfterEachHook({
     }
   });
 }
-
-/**
- *
- * @param grantId
- * @param folderId // ! This will be the parent folder Id
- * @param
- *
- * @description test ran after creating a subFolder
- */
-
-function checkIfSubFolder({
-  grantId = "",
-  folderId,
-  payload,
-}: Partial<FolderRequestParams>) {
-  cy.get("@apiResponse").then((res: any) => {
-    const subFolder = res.body.data;
-    cy.compareObjects("Folder", subFolder, payload);
-    expect(subFolder.parent_id).to.be.equals(folderId, "Parent Id matches");
-    expect(subFolder.total_count).to.be.equals(0, "Total count is 0");
-    expect(subFolder.unread_count).to.be.equals(0, "Unread count is 0");
-    //TODO: expect(subFolder.child_count).to.be.equals(0, "Child Count is 0");
-
-    // ? Getting the parent folder again to validate that it's present
-    cy.getFolders({ grantId, folderId, payload: undefined });
-    cy.get("@apiResponse").then((res: any) => {
-      const parentFolderUpdated = res.body.data;
-
-      expect(parentFolderUpdated.child_count).to.be.equals(1);
-    });
-    cy.deleteFolder({ grantId, folderId: subFolder.id, payload: undefined });
-
-    // !ALERT: afterEach will clean up the parent Folder
-  });
-}
 export default {
   getFolders,
   deleteFolder,
@@ -224,5 +173,4 @@ export default {
   createFolder,
   foldersTestBeforeEachHook,
   foldersTestAfterEachHook,
-  checkIfSubFolder,
 };

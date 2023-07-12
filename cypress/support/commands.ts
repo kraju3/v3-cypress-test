@@ -14,82 +14,57 @@ declare global {
   namespace Cypress {
     interface Chainable {
       //Events
-      createEvent: (params: EventQueryParams) => Chainable<void>;
-      getEvents: (params: EventQueryParams) => Chainable<void>;
-      updateEvent: (params: EventQueryParams) => Chainable<void>;
-      deleteEvent: (params: EventQueryParams) => Chainable<void>;
-      rsvpEvent: (params: EventQueryParams) => Chainable<void>;
-      evenTestBeforeEach: (
-        params: Partial<EventQueryParams>
-      ) => Chainable<void>;
-      evenTestAfterEach: (params: Partial<EventQueryParams>) => Chainable<void>;
+      createEvent: (params: EventQueryParams) => void;
+      getEvents: (params: EventQueryParams) => void;
+      updateEvent: (params: EventQueryParams) => void;
+      deleteEvent: (params: EventQueryParams) => void;
+      rsvpEvent: (params: EventQueryParams) => void;
+      evenTestBeforeEach: (params: Partial<EventQueryParams>) => void;
+      evenTestAfterEach: (params: Partial<EventQueryParams>) => void;
 
       //Calendars
-      createCalendar: (params: CalendarRequestParams) => Chainable<void>;
-      getCalendars: (params: CalendarRequestParams) => Chainable<void>;
-      updateCalendar: (params: CalendarRequestParams) => Chainable<void>;
-      deleteCalendar: (params: CalendarRequestParams) => Chainable<void>;
-      calendarTestBeforeEach: (
-        params: Partial<CalendarRequestParams>
-      ) => Chainable<void>;
-      calendarTestAfterEach: (
-        params: Partial<CalendarRequestParams>
-      ) => Chainable<void>;
+      createCalendar: (params: CalendarRequestParams) => void;
+      getCalendars: (params: CalendarRequestParams) => void;
+      updateCalendar: (params: CalendarRequestParams) => void;
+      deleteCalendar: (params: CalendarRequestParams) => void;
+      calendarTestBeforeEach: (params: Partial<CalendarRequestParams>) => void;
+      calendarTestAfterEach: (params: Partial<CalendarRequestParams>) => void;
 
       //Messages
 
-      sendMessage: (params: MessageRequestParams) => Chainable<void>;
-      getMessages: (params: MessageRequestParams) => Chainable<void>;
-      updateMessage: (params: MessageRequestParams) => Chainable<void>;
-      deleteMessage: (params: MessageRequestParams) => Chainable<void>;
-      messageTestBeforeEach: (
-        params: Partial<MessageRequestParams>
-      ) => Chainable<void>;
-      messageTestAfterEach: (
-        params: Partial<MessageRequestParams>
-      ) => Chainable<void>;
+      sendMessage: (params: MessageRequestParams) => void;
+      getMessages: (params: MessageRequestParams) => void;
+      updateMessage: (params: MessageRequestParams) => void;
+      deleteMessage: (params: MessageRequestParams) => void;
+      messageTestBeforeEach: (params: Partial<MessageRequestParams>) => void;
+      messageTestAfterEach: (params: Partial<MessageRequestParams>) => void;
 
       //draft
-      createDraft: (params: DraftRequestParams) => Chainable<void>;
-      getDrafts: (params: DraftRequestParams) => Chainable<void>;
-      updateDraft: (params: DraftRequestParams) => Chainable<void>;
-      deleteDraft: (params: DraftRequestParams) => Chainable<void>;
-      draftsTestBeforeEach: (
-        params: Partial<DraftRequestParams>
-      ) => Chainable<void>;
-      draftsTestAfterEach: (
-        params: Partial<DraftRequestParams>
-      ) => Chainable<void>;
+      createDraft: (params: DraftRequestParams) => void;
+      getDrafts: (params: DraftRequestParams) => void;
+      updateDraft: (params: DraftRequestParams) => void;
+      deleteDraft: (params: DraftRequestParams) => void;
+      draftsTestBeforeEach: (params: Partial<DraftRequestParams>) => void;
+      draftsTestAfterEach: (params: Partial<EventQueryParams>) => void;
 
       //folders
-      createFolder: (params: FolderRequestParams) => Chainable<void>;
-      getFolders: (params: FolderRequestParams) => Chainable<void>;
-      updateFolder: (params: FolderRequestParams) => Chainable<void>;
-      deleteFolder: (params: FolderRequestParams) => Chainable<void>;
-      foldersTestBeforeEach: (
-        params: Partial<FolderRequestParams>
-      ) => Chainable<void>;
-      foldersTestAfterEach: (
-        params: Partial<FolderRequestParams>
-      ) => Chainable<void>;
-      checkIfSubFolder: (
-        params: Partial<FolderRequestParams>
-      ) => Chainable<void>;
+      createFolder: (params: FolderRequestParams) => void;
+      getFolders: (params: FolderRequestParams) => void;
+      updateFolder: (params: FolderRequestParams) => void;
+      deleteFolder: (params: FolderRequestParams) => void;
+      foldersTestBeforeEach: (params: Partial<FolderRequestParams>) => void;
+      foldersTestAfterEach: (params: Partial<EventQueryParams>) => void;
 
       //utils
-      compareObjects: (
-        object: string,
-        actual: any,
-        expected: any
-      ) => Chainable<void>;
+      compareObjects: (object: string, actual: any, expected: any) => void;
       checkApiResponse: (
         response: any,
         flags?: Partial<{ checkData: boolean; checkError: boolean }>
-      ) => Chainable<void>;
+      ) => void;
       apiRequest: (
         requestConfig: Partial<Cypress.RequestOptions>,
         flags?: Partial<{ checkData: boolean; checkError: boolean }>
-      ) => Chainable<void>;
+      ) => void;
     }
   }
 }
@@ -153,7 +128,6 @@ Cypress.Commands.add(
   "foldersTestAfterEach",
   FolderCommands.foldersTestAfterEachHook
 );
-Cypress.Commands.add("checkIfSubFolder", FolderCommands.checkIfSubFolder);
 
 //Calendar
 Cypress.Commands.add("createCalendar", CalendarCommands.createCalendar);

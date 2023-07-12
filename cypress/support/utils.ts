@@ -84,7 +84,6 @@ export interface ICommonRequestFields {
   filesKey: "file";
   flags: Partial<APIResponseCheckFlags>;
   payload: any;
-  fixture: string;
 }
 
 export interface APIResponseCheckFlags {

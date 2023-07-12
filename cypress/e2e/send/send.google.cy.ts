@@ -1,29 +1,43 @@
-import { randomUUID } from "crypto";
-import { checkMessage } from "support/message.command";
 import type { ICommonRequestFields } from "support/utils";
-import { faker } from "@faker-js/faker";
 
+//DONE File a BUG for beta docs to resolve the send payload structure
 /**
- * TODO: Should Message GET request support metadata?
+ *{
+    "grant_id": "4610d0ca-f67f-497d-8ed8-4d72d0817be5",
+    "id": "18938c0f9216c388",
+    "message": {
+        "body": "Nylas API v3 Test!",
+        "subject": "Sending Emails with Nylas",
+        "from": [
+            {
+                "name": "",
+                "email": "kirantestnylas1@gmail.com"
+            }
+        ],
+        "to": [
+            {
+                "name": "Kiran Test",
+                "email": "kirantestnylas3@gmail.com"
+            }
+        ],
+        "cc": null,
+        "bcc": null,
+        "reply_to": null,
+        "attachments": null,
+        "send_at": null,
+        "use_draft": false
+    },
+    "schedule_id": ""
+}
  *
  *
  */
 
 describe("Send - Google E2E Test", () => {
   let messageKey: ICommonRequestFields["messageKey"] = "googleMessage";
-
   describe("Google Normal Send to a different participant", () => {
     beforeEach(() => {
-      cy.messageTestBeforeEach({
-        messageKey,
-        send: true,
-        payload: {
-          subject: `Cypress ${faker.string.uuid()}`,
-          metadata: {
-            key1: "Cypress Test",
-          },
-        },
-      });
+      cy.messageTestBeforeEach({ messageKey, send: true });
     });
 
     afterEach(() => {
@@ -31,41 +45,30 @@ describe("Send - Google E2E Test", () => {
     });
 
     it("message should match the payload", function () {
-      checkMessage(messageKey, (message) => {
-        cy.compareObjects("Message Sent: ", message, this.payload);
-      });
+      const message = this[messageKey ?? ""];
+
+      cy.compareObjects("Message", message, this.payload);
     });
 
-    it(
-      "message should be received",
-      {
-        retries: {
-          openMode: 2,
-          runMode: 1,
-        },
-      },
-      function () {
-        cy.wait(5000);
-        checkMessage(messageKey, (messageSent) => {
-          const recipient = messageSent.to[0];
-          cy.getMessages({
-            grantId: recipient.email ?? "",
-            query: {
-              subject: this.payload.subject,
-            },
-          });
-          checkMessage("apiResponse", (response) => {
-            const messageReceived = response.body.data;
-            expect(messageReceived[0]?.folders).to.includes("INBOX");
-            assert.isNotNull(messageReceived[0].thread_id);
-          });
-        });
-      }
-    );
+    it("message should be received", function () {
+      cy.wait(15000);
+      const { grantId } = this.messageConfig;
+      const message = this[messageKey ?? ""];
+      cy.getMessages({ grantId, messageId: message.id, payload: undefined });
+      cy.get("@apiResponse").then((res: any) => {
+        assert.isDefined(res.body.data, "Response data is present");
+        expect(res.body.data.id).to.equals(message.id);
+        expect(res.body.data.folders).to.contain("SENT");
+        expect(res.body.data.thread_id).to.is.not.undefined(
+          "Thread ID is not undefined"
+        );
+      });
+      cy.compareObjects("Message", message, this.payload);
+      //   expect(message.to).to.equals(this.payload.to);
+    });
   });
 
-  // !Skipping this for now till the Webhook Implementation is done
-  describe.skip("Google Async Send", () => {
+  describe("Google Async Send", () => {
     beforeEach(() => {
       cy.messageTestBeforeEach({
         messageKey,

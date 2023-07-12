@@ -1,10 +1,10 @@
-import { FolderRequestParams } from "./folder.command";
 import type { ICommonRequestFields } from "./utils";
 import utils from "./utils";
 
 export interface MessageRequestParams extends Partial<ICommonRequestFields> {
   grantId: string;
   messageId?: string;
+  payload: any;
   query?: Partial<{
     limit: number;
     subject: string;
@@ -86,10 +86,6 @@ function sendMessage({
   cy.apiRequest(generateMessageRequest({ grantId, payload, send }, "POST"), {
     checkData: true,
   });
-}
-
-export function checkMessage(messageKey: string, handler: (res: any) => void) {
-  return cy.get(`@${messageKey}`).then((res) => handler(res));
 }
 
 function messageTestBeforeEachHook({
