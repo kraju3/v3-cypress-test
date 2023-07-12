@@ -36,7 +36,7 @@ describe.only("Send - Microsoft E2E Test", () => {
     });
 
     it(
-      "message should be received",
+      "message shosld be received",
       {
         retries: {
           openMode: 2,
@@ -53,11 +53,12 @@ describe.only("Send - Microsoft E2E Test", () => {
               subject: this.payload.subject,
             },
           });
-          checkMessage("apiResponse", (response) => {
-            const messageReceived = response.body.data;
-            expect(messageReceived[0]?.folders).to.includes("INBOX");
-            assert.isNotNull(messageReceived[0].thread_id);
-          });
+        });
+
+        checkMessage("apiResponse", (response) => {
+          const messageReceived = response.body.data;
+          expect(messageReceived[0]?.folders).to.includes("INBOX");
+          assert.isNotNull(messageReceived[0].thread_id);
         });
       }
     );

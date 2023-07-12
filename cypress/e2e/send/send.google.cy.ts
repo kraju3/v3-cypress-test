@@ -54,11 +54,12 @@ describe("Send - Google E2E Test", () => {
               subject: this.payload.subject,
             },
           });
-          checkMessage("apiResponse", (response) => {
-            const messageReceived = response.body.data;
-            expect(messageReceived[0]?.folders).to.includes("INBOX");
-            assert.isNotNull(messageReceived[0].thread_id);
-          });
+        });
+        //Check to see if the recipient has this message
+        checkMessage("apiResponse", (response) => {
+          const messageReceived = response.body.data;
+          expect(messageReceived[0]?.folders).to.includes("INBOX");
+          assert.isNotNull(messageReceived[0].thread_id);
         });
       }
     );
