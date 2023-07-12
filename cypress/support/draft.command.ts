@@ -1,10 +1,9 @@
 import type { ICommonRequestFields } from "./utils";
 import utils from "./utils";
 
-export interface DraftRequestParams extends ICommonRequestFields {
+export interface DraftRequestParams extends Partial<ICommonRequestFields> {
   grantId: string;
   draftId?: string;
-  payload: any;
   query?: Partial<{
     limit: number;
     subject: string;
@@ -103,12 +102,11 @@ function draftsTestBeforeEachHook({
       cy.deleteDraft({
         grantId,
         draftId: this[draftKey].id,
-        payload: undefined,
       });
       cy.getDrafts({
         grantId,
         draftId: this[draftKey].id,
-        payload: undefined,
+
         flags: {
           check404: true,
           checkData: false,
@@ -152,12 +150,10 @@ function draftsTestAfterEachHook({
       cy.deleteDraft({
         grantId,
         draftId: this[draftKey].id,
-        payload: undefined,
       });
       cy.getDrafts({
         grantId,
         draftId: this[draftKey].id,
-        payload: undefined,
         flags: {
           check404: provider === "google",
           checkData: false,

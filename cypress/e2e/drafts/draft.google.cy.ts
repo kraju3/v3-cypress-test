@@ -12,7 +12,7 @@ describe("Draft - Google E2E Test", () => {
     });
 
     it("draft should match the payload", function () {
-      const draft = this[draftKey ?? ""];
+      const draft = this[draftKey];
 
       cy.compareObjects("Message", draft, this.payload);
     });
@@ -21,7 +21,7 @@ describe("Draft - Google E2E Test", () => {
      * TODO Change this when the PUT call is done for Google- HTTP 501
      */
     it("should allow me to update the draft and see if the properties match", function () {
-      const draft = this[draftKey ?? ""];
+      const draft = this[draftKey];
       const { grantId, putPayload } = this.draftConfig;
 
       cy.updateDraft({

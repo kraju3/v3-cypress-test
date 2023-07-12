@@ -21,7 +21,7 @@ describe("Event - Google Timespan Event E2E test", () => {
     });
 
     it("should match all the properties of the payload", function () {
-      const event = this[eventKey ?? ""];
+      const event = this[eventKey];
 
       assert.isTrue(event.title === this.payload.title, "Event title matches");
       assert.isTrue(
@@ -59,7 +59,7 @@ describe("Event - Google Timespan Event E2E test", () => {
       cy.getEvents({
         grantId,
         calendarId,
-        payload: undefined,
+
         query: {
           metadata_pair: metadataQuery,
         },
@@ -88,7 +88,7 @@ describe("Event - Google Timespan Event E2E test", () => {
 
       cy.updateEvent({
         grantId,
-        eventId: this[eventKey ?? ""].id,
+        eventId: this[eventKey].id,
         calendarId,
         payload,
       });
@@ -135,14 +135,14 @@ describe("Event - Google Timespan Event E2E test", () => {
         cy.rsvpEvent({
           calendarId: "primary",
           grantId: participant,
-          eventId: this[eventKey ?? ""].id,
+          eventId: this[eventKey].id,
           payload: rsvpPayload,
         });
 
         cy.getEvents({
           calendarId,
           grantId,
-          eventId: this[eventKey ?? ""].id,
+          eventId: this[eventKey].id,
           payload: null,
         });
 
@@ -185,7 +185,7 @@ describe("Event - Google Timespan Event E2E test", () => {
     });
 
     it("Conferencing object is present", function () {
-      const event = this[eventKey ?? ""];
+      const event = this[eventKey];
 
       assert.isDefined(
         event.conferencing,
@@ -221,7 +221,7 @@ describe("Event - Google Timespan Event E2E test", () => {
 
       cy.updateEvent({
         grantId,
-        eventId: this[eventKey ?? ""].id,
+        eventId: this[eventKey].id,
         calendarId,
         payload: newPayload,
       });
@@ -249,7 +249,7 @@ describe("Event - Google Timespan Event E2E test", () => {
 
       cy.getEvents({
         grantId: participantGrantId,
-        eventId: this[eventKey ?? ""].id,
+        eventId: this[eventKey].id,
         calendarId: "primary",
         payload: null,
       });
@@ -258,7 +258,7 @@ describe("Event - Google Timespan Event E2E test", () => {
         const participEvent = response.body.data;
         assert.strictEqual(
           participEvent.conferencing.details.url,
-          this[eventKey ?? ""].conferencing.details.url,
+          this[eventKey].conferencing.details.url,
           "Both participant and organizers meeting urls are same"
         );
       });
@@ -282,7 +282,7 @@ describe("Event - Google Timespan Event E2E test", () => {
       };
       cy.updateEvent({
         grantId,
-        eventId: this[eventKey ?? ""].id,
+        eventId: this[eventKey].id,
         calendarId,
         payload: newPayload,
       });
@@ -319,7 +319,7 @@ describe("Event - Google Timespan Event E2E test", () => {
     });
 
     it("should match all the properties of the payload", function () {
-      const event = this[eventKey ?? ""];
+      const event = this[eventKey];
       const { grantId, calendarId, postPayload } = this.eventConfig;
 
       assert(event.hide_participants === true, "Hide participant is true");
@@ -328,7 +328,7 @@ describe("Event - Google Timespan Event E2E test", () => {
     it("Participant event should not contain any participants", function () {
       cy.wait(5000);
 
-      const event = this[eventKey ?? ""];
+      const event = this[eventKey];
 
       const { calendarId, postPayload } = this.eventConfig;
 
@@ -339,7 +339,7 @@ describe("Event - Google Timespan Event E2E test", () => {
       cy.getEvents({
         calendarId,
         grantId: participant[0].email,
-        eventId: this[eventKey ?? ""].id,
+        eventId: this[eventKey].id,
         payload: null,
       });
 

@@ -73,16 +73,17 @@ function apiRequest(
 }
 
 export interface ICommonRequestFields {
-  provider?: "google" | "microsoft";
-  eventKey?: "googleEvent" | "microsoftEvent";
-  messageKey?: "googleMessage" | "microsoftMessage";
-  draftKey?: "googleDraft" | "microsoftDraft";
-  folderKey?: "googleLabel" | "microsoftFolder";
-  calendarKey?: "googleCalendar" | "microsoftCalendar";
-  contactKey?: "googleContact" | "microsoftContact";
-  availabilityKey?: "googleAvailability" | "microsoftAvailability";
-  filesKey?: "file";
-  flags?: Partial<APIResponseCheckFlags>;
+  provider: "google" | "microsoft";
+  eventKey: "googleEvent" | "microsoftEvent";
+  messageKey: "googleMessage" | "microsoftMessage";
+  draftKey: "googleDraft" | "microsoftDraft";
+  folderKey: "googleLabel" | "microsoftFolder";
+  calendarKey: "googleCalendar" | "microsoftCalendar";
+  contactKey: "googleContact" | "microsoftContact";
+  availabilityKey: "googleAvailability" | "microsoftAvailability";
+  filesKey: "file";
+  flags: Partial<APIResponseCheckFlags>;
+  payload: any;
 }
 
 export interface APIResponseCheckFlags {
