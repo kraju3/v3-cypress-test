@@ -3,33 +3,8 @@ import type { ICommonRequestFields } from "support/utils";
 
 /**
  *
- * TODO file a bug for Doc to remove child_count
+ * @doc Folder Integration
  */
-
-function checkIfSubFolder({
-  grantId = "",
-  folderId,
-  payload,
-}: Partial<FolderRequestParams>) {
-  cy.get("@apiResponse").then((res: any) => {
-    const subFolder = res.body.data;
-    cy.compareObjects("Folder", subFolder, payload);
-    expect(subFolder.parent_id).to.be.equals(folderId, "Parent Id matches");
-    expect(subFolder.total_count).to.be.equals(0, "Total count is 0");
-    expect(subFolder.unread_count).to.be.equals(0, "Unread count is 0");
-    //expect(subFolder.child_count).to.be.equals(0, "Child Count is 0");
-
-    cy.getFolders({ grantId, folderId, payload: undefined });
-    cy.get("@apiResponse").then((res: any) => {
-      const parentFolderUpdated = res.body.data;
-
-      expect(parentFolderUpdated.child_count).to.be.equals(1);
-    });
-    cy.deleteFolder({ grantId, folderId: subFolder.id, payload: undefined });
-
-    //afterEach will clean up the parent Folder
-  });
-}
 
 describe("Folder - Microsoft Labels E2E Test", () => {
   let folderKey: ICommonRequestFields["folderKey"] = "microsoftFolder";
@@ -84,7 +59,7 @@ describe("Folder - Microsoft Labels E2E Test", () => {
       };
 
       cy.createFolder({ grantId, payload: newSubFolderPayload });
-      checkIfSubFolder({
+      cy.checkIfSubFolder({
         grantId,
         folderId: parentFolder.id,
         payload: newSubFolderPayload,
