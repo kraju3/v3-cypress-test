@@ -1,10 +1,9 @@
 import type { ICommonRequestFields } from "./utils";
 import utils from "./utils";
 
-export interface FolderRequestParams extends ICommonRequestFields {
+export interface FolderRequestParams extends Partial<ICommonRequestFields> {
   grantId: string;
   folderId?: string;
-  payload: any;
   query?: Partial<{
     limit: number;
     subject: string;
@@ -107,12 +106,11 @@ function foldersTestBeforeEachHook({
       cy.deleteFolder({
         grantId,
         folderId: this[folderKey].id,
-        payload: undefined,
       });
       cy.getFolders({
         grantId,
         folderId: this[folderKey].id,
-        payload: undefined,
+
         flags: {
           check404: true,
           checkData: false,
@@ -155,12 +153,11 @@ function foldersTestAfterEachHook({
       cy.deleteFolder({
         grantId,
         folderId: this[folderKey].id,
-        payload: undefined,
       });
       cy.getFolders({
         grantId,
         folderId: this[folderKey].id,
-        payload: undefined,
+
         flags: {
           check404: true,
           checkData: false,

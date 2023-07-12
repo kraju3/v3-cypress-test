@@ -1,10 +1,9 @@
 import type { ICommonRequestFields } from "./utils";
 import utils from "./utils";
 
-export interface CalendarRequestParams extends ICommonRequestFields {
+export interface CalendarRequestParams extends Partial<ICommonRequestFields> {
   calendarId?: string;
   grantId: string;
-  payload: any;
 }
 function generateCalendarRequest(
   { grantId, calendarId, payload }: Partial<CalendarRequestParams>,
@@ -87,13 +86,11 @@ function calendarTestBeforeEachHook({
       cy.deleteCalendar({
         grantId,
         calendarId: encodeURIComponent(this[calendarKey].id),
-        payload: undefined,
       });
 
       cy.getCalendars({
         grantId,
         calendarId: encodeURIComponent(this[calendarKey].id),
-        payload: undefined,
         flags: {
           check404: true,
           checkData: false,
@@ -101,7 +98,7 @@ function calendarTestBeforeEachHook({
       });
     }
 
-    //If no Calendar is present then Create the calendar
+    //If no Calendar is present then Create the calendar overwrite the fixture payload
 
     payload = {
       ...postPayload,
@@ -136,12 +133,10 @@ function calendarTestAfterEachHook({
       cy.deleteCalendar({
         grantId,
         calendarId: encodeURIComponent(this[calendarKey].id),
-        payload: undefined,
       });
       cy.getCalendars({
         grantId,
         calendarId: encodeURIComponent(this[calendarKey].id),
-        payload: undefined,
         flags: {
           check404: true,
           checkData: false,

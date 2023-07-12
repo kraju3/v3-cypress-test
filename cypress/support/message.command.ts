@@ -1,7 +1,7 @@
 import type { ICommonRequestFields } from "./utils";
 import utils from "./utils";
 
-export interface MessageRequestParams extends ICommonRequestFields {
+export interface MessageRequestParams extends Partial<ICommonRequestFields> {
   grantId: string;
   messageId?: string;
   payload: any;
@@ -106,7 +106,7 @@ function messageTestBeforeEachHook({
       //   cy.getMessages({
       //     grantId,
       //     messageId: this[messageKey].id,
-      //     payload: undefined,
+      //
       //   });
     }
 
@@ -153,7 +153,7 @@ function messageTestAfterEachHook({
       //   cy.getMessages({
       //     grantId,
       //     messageId: this[messageKey].id,
-      //     payload: undefined,
+      //
       //   });
     }
   });

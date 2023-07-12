@@ -23,6 +23,12 @@ function checkApiResponse(
     expect(response.status).to.be.eq(404, "Response status is 404");
     defaultOkayFlag = false;
   }
+
+  if (flags?.checkError) {
+    assert.isDefined(response.body.data.error, "Error object is present");
+    expect(response.statusText).to.be.not.equals("OK");
+    cy.log(`@${response.body.data.error}`);
+  }
   if (defaultOkayFlag) {
     expect(response.statusText).to.be.equals("OK");
     assert.isTrue(response.status < 400);
@@ -30,11 +36,6 @@ function checkApiResponse(
 
   if (flags?.checkData) {
     assert.isDefined(response.body.data, "Request data is present");
-  }
-  if (flags?.checkError) {
-    assert.isDefined(response.body.data.error, "Error object is present");
-    expect(response.statusText).to.be.not.equals("OK");
-    cy.log(`@${response.body.data.error}`);
   }
 }
 
@@ -52,6 +53,7 @@ function transformActualObject(actual: any, expected: any) {
     }
     if (!Array.isArray(actual[curr]) && typeof actual[curr] === "object") {
       acc[curr] = transformActualObject(actual[curr], expected[curr]);
+      return acc;
     }
     acc[curr] = actual[curr];
     return acc;
@@ -71,16 +73,17 @@ function apiRequest(
 }
 
 export interface ICommonRequestFields {
-  provider?: "google" | "microsoft";
-  eventKey?: "googleEvent" | "microsoftEvent";
-  messageKey?: "googleMessage" | "microsoftMessage";
-  draftKey?: "googleDraft" | "microsoftDraft";
-  folderKey?: "googleLabel" | "microsoftFolder";
-  calendarKey?: "googleCalendar" | "microsoftCalendar";
-  contactKey?: "googleContact" | "microsoftContact";
-  availabilityKey?: "googleAvailability" | "microsoftAvailability";
-  filesKey?: "file";
-  flags?: Partial<APIResponseCheckFlags>;
+  provider: "google" | "microsoft";
+  eventKey: "googleEvent" | "microsoftEvent";
+  messageKey: "googleMessage" | "microsoftMessage";
+  draftKey: "googleDraft" | "microsoftDraft";
+  folderKey: "googleLabel" | "microsoftFolder";
+  calendarKey: "googleCalendar" | "microsoftCalendar";
+  contactKey: "googleContact" | "microsoftContact";
+  availabilityKey: "googleAvailability" | "microsoftAvailability";
+  filesKey: "file";
+  flags: Partial<APIResponseCheckFlags>;
+  payload: any;
 }
 
 export interface APIResponseCheckFlags {

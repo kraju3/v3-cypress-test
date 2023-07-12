@@ -44,13 +44,13 @@ describe("Folder - Microsoft Labels E2E Test", () => {
     });
 
     it("folder should match the payload", function () {
-      const folder = this[folderKey ?? ""];
+      const folder = this[folderKey];
 
       cy.compareObjects("Folder", folder, this.payload);
     });
 
     it("should throw an error if try to create the parent folder with the same name", function () {
-      const parentFolder = this[folderKey ?? ""];
+      const parentFolder = this[folderKey];
       const { grantId, postPayload } = this.folderConfig;
       const newSubFolderPayload = {
         ...postPayload,
@@ -75,7 +75,7 @@ describe("Folder - Microsoft Labels E2E Test", () => {
     });
 
     it("should allow you to create subfolders and delete them", function () {
-      const parentFolder = this[folderKey ?? ""];
+      const parentFolder = this[folderKey];
       const { grantId, postPayload } = this.folderConfig;
       const newSubFolderPayload = {
         ...postPayload,

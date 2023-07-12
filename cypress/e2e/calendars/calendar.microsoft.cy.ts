@@ -13,7 +13,7 @@ describe("Calendar - Microsoft E2E tests", () => {
   });
 
   it("should match the payload of the POST request", function () {
-    const calendar = this[calendarKey ?? ""];
+    const calendar = this[calendarKey];
     const { postPayload } = this.calendarConfig;
     cy.compareObjects("Calendar", calendar, postPayload);
     expect(calendar.read_only).eq(false, "Calendar is read-only:false");
@@ -30,7 +30,7 @@ describe("Calendar - Microsoft E2E tests", () => {
     cy.wait(20000);
     cy.updateCalendar({
       grantId,
-      calendarId: this[calendarKey ?? ""].id,
+      calendarId: this[calendarKey].id,
       payload,
     });
 
@@ -42,7 +42,7 @@ describe("Calendar - Microsoft E2E tests", () => {
 
   it("should allow you to create an Event on that calendar", function () {
     const { grantId } = this.calendarConfig;
-    const calendar = this[calendarKey ?? ""];
+    const calendar = this[calendarKey];
 
     const start_time = Math.floor(Date.now() / 1000) + 3600;
     const end_time = Math.floor(Date.now() / 1000) + 5400;

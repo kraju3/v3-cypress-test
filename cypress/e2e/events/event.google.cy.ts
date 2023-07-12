@@ -1,5 +1,8 @@
-describe("Event - Google Event E2E test", () => {
-  let eventKey: "googleEvent" | "microsoftEvent" = "googleEvent";
+import { ICommonRequestFields } from "support/utils";
+
+let eventKey: ICommonRequestFields["eventKey"] = "googleEvent";
+
+describe("Event - Google Timespan Event E2E test", () => {
   /***
    * @name Google Timespan Event Test
    *
@@ -56,7 +59,7 @@ describe("Event - Google Event E2E test", () => {
       cy.getEvents({
         grantId,
         calendarId,
-        payload: undefined,
+
         query: {
           metadata_pair: metadataQuery,
         },
@@ -275,7 +278,7 @@ describe("Event - Google Event E2E test", () => {
     it("remove the Google meeting link", function () {
       const { grantId, calendarId } = this.eventConfig;
       const newPayload = {
-        conferencing: null,
+        conferencing: {},
       };
       cy.updateEvent({
         grantId,
@@ -293,4 +296,73 @@ describe("Event - Google Event E2E test", () => {
       });
     });
   });
+
+  /**
+   * This test will fail if the participant don't have a valid grant. However, you can validate via UI with the pause.
+   */
+
+  describe("Google - Hide participant works for both", () => {
+    beforeEach(
+      "Create a Google timespan event with hide participants",
+      function () {
+        cy.evenTestBeforeEach({
+          eventKey,
+          payload: {
+            hide_participants: true,
+          },
+        });
+      }
+    );
+
+    afterEach("Clean up any after", function () {
+      cy.evenTestAfterEach({ eventKey });
+    });
+
+    it("should match all the properties of the payload", function () {
+      const event = this[eventKey];
+      const { grantId, calendarId, postPayload } = this.eventConfig;
+
+      assert(event.hide_participants === true, "Hide participant is true");
+    });
+
+    it("Participant event should not contain any participants", function () {
+      cy.wait(5000);
+
+      const event = this[eventKey];
+
+      const { calendarId, postPayload } = this.eventConfig;
+
+      const participant = postPayload.participants.filter(
+        (particip: any) => particip.email !== event.organizer.email
+      );
+
+      cy.getEvents({
+        calendarId,
+        grantId: participant[0].email,
+        eventId: this[eventKey].id,
+        payload: null,
+      });
+
+      cy.get("@apiResponse").then((res: any) => {
+        const eventData = res.body.data;
+        const otherParticipantExist = eventData.participants.some(
+          (particip: any) => particip.email !== participant[0].email
+        );
+        assert.isFalse(
+          otherParticipantExist,
+          "Only participant should be the main organizer"
+        );
+      });
+    });
+  });
+});
+
+/**
+ * Google Recurring Event tests
+ */
+
+describe("Google - Recurring Event Test", () => {
+  beforeEach(() => {});
+
+  afterEach(() => {});
 });

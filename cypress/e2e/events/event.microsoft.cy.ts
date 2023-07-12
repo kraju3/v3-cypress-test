@@ -57,7 +57,7 @@ describe("Event - Microsoft Event E2E test", () => {
       cy.getEvents({
         grantId,
         calendarId,
-        payload: undefined,
+
         query: {
           metadata_pair: metadataQuery,
         },

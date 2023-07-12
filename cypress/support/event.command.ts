@@ -1,10 +1,9 @@
 import type { ICommonRequestFields } from "./utils";
 import utils from "./utils";
 
-export interface EventQueryParams extends ICommonRequestFields {
+export interface EventQueryParams extends Partial<ICommonRequestFields> {
   calendarId: string;
   grantId: string;
-  payload: any;
   eventId?: any;
   rsvp?: boolean;
   query?: Cypress.RequestOptions["qs"];
@@ -17,14 +16,14 @@ function generateEventRequest(
     payload,
     eventId,
     rsvp,
-    query,
+    query = {},
   }: Partial<EventQueryParams>,
   method: string
 ) {
   return {
     url: `${Cypress.env("API_BASE_URL")}/grants/${grantId}/events${
       eventId ? `/${eventId}` : ""
-    }${rsvp ? `/send-rsvp` : ""}?calendar_id=${calendarId}`,
+    }${rsvp ? `/send-rsvp` : ""}`,
     auth: {
       bearer: `${Cypress.env("API_KEY")}`,
     },
@@ -114,7 +113,6 @@ function eventTestBeforeEachHook({
         grantId,
         eventId: this[eventKey].id,
         calendarId,
-        payload: undefined,
       });
 
       //only check the event status is cancelled for Google
@@ -123,7 +121,6 @@ function eventTestBeforeEachHook({
           grantId,
           eventId: this[eventKey].id,
           calendarId,
-          payload: undefined,
         });
         cy.get("@apiResponse").then((response: any) => {
           assert.isTrue(response.body.data.status === "cancelled");
@@ -176,7 +173,6 @@ function eventTestAfterEachHook({
         grantId,
         eventId: this[eventKey].id,
         calendarId,
-        payload: undefined,
       });
       if (provider === "microsoft") {
         return;
@@ -185,7 +181,6 @@ function eventTestAfterEachHook({
         grantId,
         eventId: this[eventKey].id,
         calendarId,
-        payload: undefined,
       });
 
       cy.get("@apiResponse").then((response: any) => {
