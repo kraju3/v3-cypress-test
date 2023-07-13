@@ -30,13 +30,17 @@ describe.only("Send - Microsoft E2E Test", () => {
     });
 
     it("message should match the payload", function () {
-      checkMessage(messageKey, (message) => {
+      checkMessage(messageKey, (message: any) => {
         cy.compareObjects("Message Sent: ", message, this.payload);
       });
     });
 
+    it("should check for all the properties of the message", function () {
+      checkMessage(messageKey, (message: any) => {});
+    });
+
     it(
-      "message shosld be received",
+      "message shold be received",
       {
         retries: {
           openMode: 2,

@@ -22,6 +22,7 @@ describe("Send - Google E2E Test", () => {
           metadata: {
             key1: "Cypress Test",
           },
+          attachments: [],
         },
       });
     });
@@ -83,5 +84,48 @@ describe("Send - Google E2E Test", () => {
     });
 
     // TODO: Create stubs for async send flow.
+  });
+
+  //TODO: Content_id is missing
+
+  describe.only("attachment test", function () {
+    beforeEach(() => {
+      cy.messageTestBeforeEach({
+        messageKey,
+        send: true,
+        payload: {
+          subject: `Cypress ${faker.string.uuid()}`,
+          metadata: {
+            key1: "Cypress Test",
+          },
+        },
+      });
+    });
+    afterEach(() => {
+      cy.messageTestAfterEach({ messageKey });
+    });
+
+    it("should allow me to attach less than 3MB via payload", function () {
+      //check the send response
+      checkMessage(messageKey, (message) => {
+        const { grantId } = this.messageConfig;
+        cy.getMessages({
+          messageId: message.id,
+          grantId,
+        });
+      });
+
+      //check the get call
+      checkMessage("apiResponse", (message) => {
+        assert.isDefined(message.attachments);
+
+        cy.wrap(message.attachments)
+          .as("attachments")
+          .each((attachment: any) => {
+            assert.isDefined(attachment.content_id);
+            assert.isTrue(attachment.content_id !== "");
+          });
+      });
+    });
   });
 });
