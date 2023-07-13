@@ -2,11 +2,15 @@ import { faker } from "@faker-js/faker";
 import { checkMessage } from "support/message.command";
 import type { ICommonRequestFields } from "support/utils";
 
+/**
+ * POST returns attachments and GET returns files
+ */
+
 let messageKey: ICommonRequestFields["messageKey"] = "microsoftMessage";
 let provider: ICommonRequestFields["provider"] = "microsoft";
 
-describe.only("Send - Microsoft E2E Test", () => {
-  describe("Microsoft Normal Send", () => {
+describe("Send - Microsoft E2E Test", () => {
+  describe.only("Microsoft Normal Send", () => {
     beforeEach(() => {
       cy.messageTestBeforeEach({
         provider,
@@ -17,6 +21,7 @@ describe.only("Send - Microsoft E2E Test", () => {
           metadata: {
             key1: "Cypress Test",
           },
+          attachments: [],
         },
       });
     });
@@ -68,36 +73,64 @@ describe.only("Send - Microsoft E2E Test", () => {
     );
   });
 
-  //TODO query for the message and check if it's in the right folder
-
-  /**
-   * @async send
-   *
-   * @description
-   * We need to send the message, the first test should wait from the time we scheduled to send
-   *
-   * Due to time constraints we are testing 2 minutes max ahead
-   *
-   * ! SKIPPED
-   */
-
-  describe.skip("Microsoft Async Send", () => {
+  describe.only("attachment test", function () {
     beforeEach(() => {
       cy.messageTestBeforeEach({
-        provider,
         messageKey,
+        provider,
         send: true,
         payload: {
-          useDraft: false,
-          send_at: Math.floor(Date.now() / 1000) + 120,
+          subject: `Cypress ${faker.string.uuid()}`,
+          metadata: {
+            key1: "Cypress Test",
+          },
         },
       });
     });
-
     afterEach(() => {
-      cy.messageTestAfterEach({ provider, messageKey });
+      cy.messageTestAfterEach({ messageKey, provider });
     });
 
-    //TODO check async message
+    it("should allow me to attach less than 3MB via payload", function () {
+      //check the send response
+      cy.wait(10000);
+      checkMessage(messageKey, (message) => {
+        const { grantId } = this.messageConfig;
+        cy.getMessages({
+          messageId: message.id,
+          grantId,
+          query: {
+            subject: this.payload.subject,
+          },
+        });
+      });
+
+      //check the get call
+      checkMessage("apiResponse", (response) => {
+        const message = response.body.data[0];
+        assert.isDefined(message.files);
+
+        cy.wrap(message.files)
+          .as("attachments")
+          .each((attachment: any) => {
+            assert.isDefined(attachment.content_id);
+            assert.isTrue(attachment.content_id !== "");
+          });
+      });
+    });
   });
 });
+
+//TODO query for the message and check if it's in the right folder
+
+/**
+ * @async send
+ *
+ * @description
+ * We need to send the message, the first test should wait from the time we scheduled to send
+ *
+ * Due to time constraints we are testing 2 minutes max ahead
+ *
+ * ! SKIPPED
+ * *
+ */
