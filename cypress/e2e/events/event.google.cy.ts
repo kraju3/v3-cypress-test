@@ -363,6 +363,8 @@ describe.skip("Event - Google Timespan Event E2E test", () => {
  *
  * ? Do we not support COUNT?
  *
+ * TODO: File a bug because of the number of instances we return
+ *
  * ! The current test is doing a DAILY rule. Alter the payload for your tests
  */
 
@@ -378,7 +380,7 @@ describe.only("Google - Recurring Event Test", () => {
         },
         recurrence: {
           rrule: [
-            "RRULE:FREQ=DAILY;COUNT=29;UNTIL=20230822T093000Z",
+            "RRULE:FREQ=DAILY;UNTIL=20230822T093000Z",
             "EXDATE:20230722T143000Z",
           ],
           timezone: "America/Chicago",
@@ -419,12 +421,14 @@ describe.only("Google - Recurring Event Test", () => {
         query: {
           title: event.title,
           expand_recurring: true,
+          limit: 100,
         },
       });
     });
 
     cy.get("@apiResponse").then((res: any) => {
       const events = res.body.data;
+      assert.equal(events.length, 36, "Contains 36 events");
       events.forEach((event: any) => {
         expect(event.description).to.equals("Updated description Event title");
       });
