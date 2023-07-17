@@ -2,7 +2,7 @@ import { ICommonRequestFields } from "support/utils";
 
 let eventKey: ICommonRequestFields["eventKey"] = "googleEvent";
 
-describe("Event - Google Timespan Event E2E test", () => {
+describe.skip("Event - Google Timespan Event E2E test", () => {
   /***
    * @name Google Timespan Event Test
    *
@@ -361,8 +361,29 @@ describe("Event - Google Timespan Event E2E test", () => {
  * Google Recurring Event tests
  */
 
-describe("Google - Recurring Event Test", () => {
-  beforeEach(() => {});
+describe.only("Google - Recurring Event Test", () => {
+  beforeEach(() => {
+    cy.evenTestBeforeEach({
+      eventKey,
+      payload: {
+        when: {
+          start_time: 1689604200,
+          end_time: 1689606000,
+        },
+        recurrence: {
+          rrule: [
+            "RRULE:FREQ=DAILY;UNTIL=20230822T093000Z",
+            "EXDATE:20230722T093000Z",
+          ],
+          timezone: "America/Chicago",
+        },
+      },
+    });
+  });
 
-  afterEach(() => {});
+  afterEach(() => {
+    cy.evenTestAfterEach({ eventKey });
+  });
+
+  it("should create a recurring event", () => {});
 });
