@@ -4,8 +4,8 @@ const rruleSet = new RRuleSet();
 // Add a rrule to rruleSet
 rruleSet.rrule(
   new RRule({
-    freq: RRule.MONTHLY,
-    count: 5,
+    freq: RRule.DAILY,
+    count: 36,
     dtstart: datetime(2023, 7, 17, 9, 30),
     until: datetime(2023, 8, 22, 9, 30),
   })
