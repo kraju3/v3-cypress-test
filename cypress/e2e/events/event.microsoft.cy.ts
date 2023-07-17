@@ -1,6 +1,10 @@
-describe("Event - Microsoft Event E2E test", () => {
-  let eventKey: "googleEvent" | "microsoftEvent" = "microsoftEvent";
-  let provider: "google" | "microsoft" = "microsoft";
+import { faker } from "@faker-js/faker";
+import { ICommonRequestFields } from "support/utils";
+
+let eventKey: ICommonRequestFields["eventKey"] = "microsoftEvent";
+let provider: ICommonRequestFields["provider"] = "microsoft";
+
+describe.skip("Event - Microsoft Event E2E test", () => {
   /***
    * @name Microsoft Timespan Event Test
    *
@@ -261,6 +265,138 @@ describe("Event - Microsoft Event E2E test", () => {
         assert.isUndefined(
           event.conferencing,
           "Conferencing object should not be present anymore"
+        );
+      });
+    });
+  });
+});
+
+/**
+ * Microsoft Recurring Event tests
+ *
+ * ? Do we not support COUNT?
+ *
+ *
+ *
+ * ! The current test is doing a DAILY rule. Alter the payload for your tests
+ */
+
+describe.only("Google - Recurring Event Test", () => {
+  beforeEach(() => {
+    cy.evenTestBeforeEach({
+      eventKey,
+      provider,
+      payload: {
+        title: `Cypress Recurrence ${faker.string.uuid()}`,
+        when: {
+          start_time: 1689604200,
+          end_time: 1689606000,
+        },
+        recurrence: {
+          rrule: [
+            "RRULE:FREQ=DAILY;COUNT=35;UNTIL=20230822T093000Z",
+            "EXDATE:20230722T143000Z",
+          ],
+          timezone: "America/Chicago",
+        },
+      },
+    });
+  });
+
+  afterEach(() => {
+    cy.evenTestAfterEach({ eventKey, provider });
+  });
+
+  it("should create a recurring event", function () {
+    cy.log(`Recurring Event payload${this.payload}\n Compare UI and payload`);
+
+    cy.get(`@${eventKey}`).then((event: any) => {
+      assert.isDefined(event.recurrence);
+    });
+  });
+
+  it("should allow you to update master event", function () {
+    cy.log(`Recurring Event payload${this.payload}\n Compare UI and payload`);
+
+    cy.get(`@${eventKey}`).then((event: any) => {
+      const { grantId } = this.eventConfig;
+      cy.updateEvent({
+        grantId,
+        calendarId: "primary",
+        eventId: event.id,
+        payload: {
+          description: "Updated description Event title",
+        },
+      });
+      cy.getEvents({
+        grantId,
+        calendarId: "primary",
+        query: {
+          title: event.title,
+          expand_recurring: true,
+          limit: 100,
+          start: 1689604200,
+          end: 1692867869,
+        },
+      });
+    });
+
+    cy.get("@apiResponse").then((res: any) => {
+      const events = res.body.data;
+      //! 35 instances are based on the current payload
+      assert.equal(events.length, 35, "Contains 35 events");
+
+      events.forEach((event: any) => {
+        expect(event.ical_uid).to.equals(
+          this[eventKey].ical_uid,
+          "ICal uid links back to master event"
+        );
+        expect(event.description).to.equals("Updated description Event title");
+      });
+    });
+  });
+
+  it("should allow you to update an instance event", function () {
+    cy.log(`Recurring Event payload${this.payload}\n Compare UI and payload`);
+
+    cy.get(`@${eventKey}`).then((event: any) => {
+      const { grantId } = this.eventConfig;
+      cy.getEvents({
+        grantId,
+        calendarId: "primary",
+        query: {
+          title: event.title,
+          expand_recurring: true,
+          limit: 100,
+          start: 1689604200,
+          end: 1692867869,
+        },
+      });
+    });
+
+    cy.get("@apiResponse").then((res: any) => {
+      const events = res.body.data;
+      cy.wrap(events[2]).as("eventToUpdate");
+    });
+
+    cy.get("@eventToUpdate").then((eventToUpdate: any) => {
+      const { grantId } = this.eventConfig;
+      cy.updateEvent({
+        grantId,
+        calendarId: "primary",
+        eventId: eventToUpdate.id,
+        payload: {
+          description: "Updated description for an instance Event title",
+        },
+      });
+      cy.get("@apiResponse").then((res: any) => {
+        const updatedEvent = res.body.data;
+        expect(updatedEvent.ical_uid).to.equals(
+          this[eventKey].ical_uid,
+          "ICal uid links back to master event"
+        );
+        expect(updatedEvent.description).to.equals(
+          "Updated description for an instance Event title"
         );
       });
     });

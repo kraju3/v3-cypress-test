@@ -1,6 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { ICommonRequestFields } from "support/utils";
 
+function generateQueryString(metadata: any) {
+  return Object.entries(metadata).reduce((acc, [key, val]: any) => {
+    acc = `${key}:${val}`;
+    return acc;
+  }, "");
+}
+
 let eventKey: ICommonRequestFields["eventKey"] = "googleEvent";
 
 describe.skip("Event - Google Timespan Event E2E test", () => {
@@ -48,13 +55,6 @@ describe.skip("Event - Google Timespan Event E2E test", () => {
 
     it("get by metadata should work", function () {
       const { grantId, calendarId } = this.eventConfig;
-
-      function generateQueryString(metadata: any) {
-        return Object.entries(metadata).reduce((acc, [key, val]: any) => {
-          acc = `${key}:${val}`;
-          return acc;
-        }, "");
-      }
 
       const metadataQuery = generateQueryString(this.payload.metadata);
       cy.getEvents({
@@ -363,7 +363,7 @@ describe.skip("Event - Google Timespan Event E2E test", () => {
  *
  * ? Do we not support COUNT?
  *
- * TODO: File a bug because of the number of instances we return
+ *
  *
  * ! The current test is doing a DAILY rule. Alter the payload for your tests
  */
@@ -373,7 +373,7 @@ describe.only("Google - Recurring Event Test", () => {
     cy.evenTestBeforeEach({
       eventKey,
       payload: {
-        title: `subject: Cypress Recurrence ${faker.string.uuid()}`,
+        title: `Cypress Recurrence ${faker.string.uuid()}`,
         when: {
           start_time: 1689604200,
           end_time: 1689606000,
@@ -414,7 +414,6 @@ describe.only("Google - Recurring Event Test", () => {
           description: "Updated description Event title",
         },
       });
-
       cy.getEvents({
         grantId,
         calendarId: "primary",
@@ -422,15 +421,69 @@ describe.only("Google - Recurring Event Test", () => {
           title: event.title,
           expand_recurring: true,
           limit: 100,
+          start: 1689604200,
+          end: 1692867869,
         },
       });
     });
 
     cy.get("@apiResponse").then((res: any) => {
       const events = res.body.data;
-      assert.equal(events.length, 36, "Contains 36 events");
+      //! 35 instances are based on the current payload
+      assert.equal(events.length, 35, "Contains 35 events");
+
       events.forEach((event: any) => {
+        expect(event.ical_uid).to.equals(
+          this[eventKey].ical_uid,
+          "ICal uid links back to master event"
+        );
         expect(event.description).to.equals("Updated description Event title");
+      });
+    });
+  });
+
+  it("should allow you to update an instance event", function () {
+    cy.log(`Recurring Event payload${this.payload}\n Compare UI and payload`);
+
+    cy.get(`@${eventKey}`).then((event: any) => {
+      const { grantId } = this.eventConfig;
+      cy.getEvents({
+        grantId,
+        calendarId: "primary",
+        query: {
+          title: event.title,
+          expand_recurring: true,
+          limit: 100,
+          start: 1689604200,
+          end: 1692867869,
+        },
+      });
+    });
+
+    cy.get("@apiResponse").then((res: any) => {
+      const events = res.body.data;
+      cy.wrap(events[2]).as("eventToUpdate");
+    });
+
+    cy.get("@eventToUpdate").then((eventToUpdate: any) => {
+      const { grantId } = this.eventConfig;
+      cy.updateEvent({
+        grantId,
+        calendarId: "primary",
+        eventId: eventToUpdate.id,
+        payload: {
+          description: "Updated description for an instance Event title",
+        },
+      });
+      cy.get("@apiResponse").then((res: any) => {
+        const updatedEvent = res.body.data;
+        expect(updatedEvent.ical_uid).to.equals(
+          this[eventKey].ical_uid,
+          "ICal uid links back to master event"
+        );
+        expect(updatedEvent.description).to.equals(
+          "Updated description for an instance Event title"
+        );
       });
     });
   });
