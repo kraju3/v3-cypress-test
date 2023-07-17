@@ -2,7 +2,8 @@
 
 ## Getting started
 
-- run `cd e2e && npm i`
+- run `npm i`
+- add your environment variables to the `cypress.env.json` file.
 - run `npm run test:dev` - Opens Cypress UI
 
 ## Directory Structure
@@ -10,11 +11,11 @@
 - `cypress/e2e`
   - All the test files
 - `cypress/support`
-  - All the cypress commands by default these files runs first before anything. It injects the Cypress with commands that you can use for your test
+  - Cypress commands by default these files.It injects the Cypress with commands that you can use for your test
   - Right now, there are separate commands for the major endpoints for our Beta release -`cypress.env.json`
   - Environment variables (example: cypress.env.sample.json)
 - `cypress/fixtures`
-  - File to load in the data. They all share a common pattern.
+  - Fixtures are primarily used to load external data or mock an API. They all share a common pattern.
     - Required Fields
       - googleGrantId
       - microsoftGrantId,
@@ -43,17 +44,19 @@
 
 ## Spec Files
 
-- These are the files were you would write your tests
+- These are the files where you would write your tests
 - Each spec file contains a similar format
-  1. Specify a Describe block
-     1. specify a object key and provider
+  1. Specify a `describe()` block
+     1. specify an object key and a provider
         1. Google is set to be the default provider
   2. Run a Before Each Hook
      1. Runs before every test in the suite
-  3. Run a After Each hook
+  3. Run an After Each hook
      1. runs after every test in the suite.
-  4. `it()` blocks that describes the test
+  4. `it()` specifies the functionality you are testing.
      1. Here you will use all the commands that you create under the support folders
+    
+- You don't have to utilize beforeEach and afterEach hook. However, this allows you to test each block exclusively with fresh objects.
 - Sample File
 
   ```

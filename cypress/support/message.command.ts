@@ -1,10 +1,10 @@
+import { FolderRequestParams } from "./folder.command";
 import type { ICommonRequestFields } from "./utils";
 import utils from "./utils";
 
 export interface MessageRequestParams extends Partial<ICommonRequestFields> {
   grantId: string;
   messageId?: string;
-  payload: any;
   query?: Partial<{
     limit: number;
     subject: string;
@@ -88,6 +88,13 @@ function sendMessage({
   });
 }
 
+export function checkMessage(messageKey: string, handler: (res: any) => void) {
+  return cy.get(`@${messageKey}`).then((res) => handler(res));
+}
+
+// ? Interesting Find
+
+//So its files for Google and attachments for Microsoft
 function messageTestBeforeEachHook({
   payload,
   provider = "google",
@@ -121,7 +128,6 @@ function messageTestBeforeEachHook({
 
       cy.sendMessage({
         grantId,
-        messageId: undefined,
         payload,
         send,
       });
@@ -129,6 +135,9 @@ function messageTestBeforeEachHook({
       cy.wrap(messageConfig).as("messageConfig");
 
       cy.get("@apiResponse").then(function (response: any) {
+        // expect(response.body.data.id, "Message Id").to.be.not.equals("");
+        // expect(response.body.data.id, "Message Id").to.be.not.equals(null);
+
         cy.wrap(
           send
             ? { id: response.body.data.id, ...response.body.data.message }
