@@ -2,7 +2,7 @@ import type { ICommonRequestFields } from "support/utils";
 
 describe("Calendar - Google E2E tests", () => {
   let calendarKey: ICommonRequestFields["calendarKey"] = "googleCalendar";
-  let provider: ICommonRequestFields["provider"] = "microsoft";
+  let provider: ICommonRequestFields["provider"] = "google";
 
   beforeEach("Create a Google Calendar", function () {
     cy.calendarTestBeforeEach({ calendarKey, provider });

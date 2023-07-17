@@ -123,6 +123,8 @@ describe("Event - Microsoft Event E2E test", () => {
   describe("Events - Microsoft Auto Conference Tests", () => {
     beforeEach("Create a Microsoft timespan event", function () {
       cy.evenTestBeforeEach({
+        eventKey,
+        provider,
         payload: {
           conferencing: {
             provider: "Microsoft Teams",
@@ -133,7 +135,7 @@ describe("Event - Microsoft Event E2E test", () => {
     });
 
     afterEach("Clean up any after", function () {
-      cy.evenTestAfterEach({});
+      cy.evenTestAfterEach({ eventKey, provider });
     });
 
     it("Conferencing object is present", function () {
