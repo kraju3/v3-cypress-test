@@ -3,7 +3,7 @@ import { ICommonRequestFields } from "support/utils";
 
 let eventKey: ICommonRequestFields["eventKey"] = "googleEvent";
 
-describe.skip("Event - Google Timespan Event E2E test", () => {
+describe("Event - Google Timespan Event E2E test", () => {
   /***
    * @name Google Timespan Event Test
    *
@@ -169,7 +169,7 @@ describe.skip("Event - Google Timespan Event E2E test", () => {
    * @description this contains the test of creating, deleting and updating Google Meets event
    *            and also validate whether the values change over the participants calendar
    */
-  describe("Events - Google Auto Conference Tests", () => {
+  describe.only("Events - Google Auto Conference Tests", () => {
     beforeEach("Create a Google timespan event", function () {
       cy.evenTestBeforeEach({
         payload: {
@@ -366,7 +366,7 @@ describe.skip("Event - Google Timespan Event E2E test", () => {
  * ! The current test is doing a DAILY rule. Alter the payload for your tests
  */
 
-describe.only("Google - Recurring Event Test", () => {
+describe("Google - Recurring Event Test", () => {
   beforeEach(() => {
     cy.evenTestBeforeEach({
       eventKey,

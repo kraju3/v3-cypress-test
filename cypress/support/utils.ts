@@ -25,9 +25,12 @@ function checkApiResponse(
   }
 
   if (flags?.checkError) {
-    assert.isDefined(response.body.data.error, "Error object is present");
+    assert.isDefined(
+      response.body.error ?? response.body.data.error,
+      "Error object is present"
+    );
     expect(response.statusText).to.be.not.equals("OK");
-    cy.log(`@${response.body.data.error}`);
+    defaultOkayFlag = false;
   }
   if (defaultOkayFlag) {
     expect(response.statusText).to.be.equals("OK");
@@ -39,8 +42,17 @@ function checkApiResponse(
   }
 }
 
-function getGrantId(provider: "google" | "microsoft", config: any) {
-  return provider === "google" ? config.googleGrantId : config.microsoftGrantId;
+function getGrantId(provider: ICommonRequestFields["provider"], config: any) {
+  switch (provider) {
+    case "google":
+      return config.googleGrantId;
+    case "microsoft":
+      return config.microsoftGrantId;
+    case "virtualCalendar":
+      return config.virtualCalendarGrantId;
+    default:
+      return config.googleGrantId;
+  }
 }
 
 function transformActualObject(actual: any, expected: any) {
@@ -73,12 +85,12 @@ function apiRequest(
 }
 
 export interface ICommonRequestFields {
-  provider: "google" | "microsoft";
-  eventKey: "googleEvent" | "microsoftEvent";
+  provider: "google" | "microsoft" | "virtualCalendar";
+  eventKey: "googleEvent" | "microsoftEvent" | "virtualEvent";
   messageKey: "googleMessage" | "microsoftMessage";
   draftKey: "googleDraft" | "microsoftDraft";
   folderKey: "googleLabel" | "microsoftFolder";
-  calendarKey: "googleCalendar" | "microsoftCalendar";
+  calendarKey: "googleCalendar" | "microsoftCalendar" | "virtualCalendar";
   contactKey: "googleContact" | "microsoftContact";
   availabilityKey: "googleAvailability" | "microsoftAvailability";
   filesKey: "file";
