@@ -1,12 +1,20 @@
 import { faker } from "@faker-js/faker";
+import { add, format, startOfToday } from "date-fns";
 import { P } from "pino";
+import { start } from "repl";
 import type { ICommonRequestFields } from "support/utils";
 
 let calendarKey: ICommonRequestFields["calendarKey"] = "virtualCalendar";
 let provider: ICommonRequestFields["provider"] = "virtualCalendar";
 describe("Calendar - Virtual Calendar E2E tests", () => {
   beforeEach("Create a Virtual Calendar", function () {
-    cy.calendarTestBeforeEach({ calendarKey, provider });
+    cy.calendarTestBeforeEach({
+      calendarKey,
+      provider,
+      payload: {
+        timezone: "America/Chicago",
+      },
+    });
   });
 
   afterEach("Clean up any Calendars after", function () {
@@ -46,7 +54,7 @@ describe("Calendar - Virtual Calendar E2E tests", () => {
     });
   });
 
-  it("should allow you to create an Event on that calendar", function () {
+  it("should allow you to create an Event -timespan on that calendar", function () {
     const { grantId } = this.calendarConfig;
     const calendar = this[calendarKey];
 
@@ -55,6 +63,12 @@ describe("Calendar - Virtual Calendar E2E tests", () => {
     const payload = {
       title: "Test Event on new Calendar",
       description: "Test Description",
+      visibility: "private",
+      participants: [
+        {
+          email: "kiran.raju@nylas.com",
+        },
+      ],
       when: {
         start_time,
         end_time,
@@ -72,6 +86,82 @@ describe("Calendar - Virtual Calendar E2E tests", () => {
 
     cy.get("@apiResponse").then(function (response: any) {
       const event = response.body.data;
+      cy.compareObjects("Event", event, payload);
+      assert.isTrue(
+        encodeURIComponent(calendar.id) === event.calendar_id,
+        `The calendar id match\n Expected:${calendar.id}\n Returned:${event.calendar_id}`
+      );
+    });
+  });
+
+  it("should allow you to create an Event datespan on that calendar", function () {
+    const { grantId } = this.calendarConfig;
+    const calendar = this[calendarKey];
+
+    const startDate = startOfToday();
+    const endDate = add(startDate, {
+      days: 1,
+    });
+
+    const start_date = format(startDate, "yyyy-MM-dd");
+    const end_date = format(endDate, "yyyy-MM-dd");
+
+    const payload = {
+      title: "Test Event on new Calendar",
+      description: "Test Description",
+      when: {
+        start_date,
+        end_date,
+      },
+    };
+
+    cy.wait(5000);
+
+    cy.createEvent({
+      grantId,
+      eventId: undefined,
+      calendarId: calendar.id,
+      payload,
+    });
+
+    cy.get("@apiResponse").then(function (response: any) {
+      const event = response.body.data;
+      cy.compareObjects("Event", event, payload);
+      assert.isTrue(
+        encodeURIComponent(calendar.id) === event.calendar_id,
+        `The calendar id match\n Expected:${calendar.id}\n Returned:${event.calendar_id}`
+      );
+    });
+  });
+
+  it("should allow you to create an Event date on that calendar", function () {
+    const { grantId } = this.calendarConfig;
+    const calendar = this[calendarKey];
+
+    const startDate = startOfToday();
+
+    const date = format(startDate, "yyyy-MM-dd");
+
+    const payload = {
+      title: "Test Event on new Calendar",
+      description: "Test Description",
+      when: {
+        date,
+      },
+    };
+
+    cy.wait(5000);
+
+    cy.createEvent({
+      grantId,
+      eventId: undefined,
+      calendarId: calendar.id,
+      payload,
+    });
+
+    cy.get("@apiResponse").then(function (response: any) {
+      const event = response.body.data;
+      cy.compareObjects("Event", event, payload);
       assert.isTrue(
         encodeURIComponent(calendar.id) === event.calendar_id,
         `The calendar id match\n Expected:${calendar.id}\n Returned:${event.calendar_id}`
@@ -81,7 +171,7 @@ describe("Calendar - Virtual Calendar E2E tests", () => {
 });
 
 describe("Virtual Calendar Max count", function () {
-  before(() => {
+  beforeEach(() => {
     cy.fixture("calendars.fixture").then(function (config: any) {
       const { virtualCalendarGrantId: grantId } = config;
       cy.wrap(config).as("calendarConfig");
@@ -99,6 +189,26 @@ describe("Virtual Calendar Max count", function () {
         });
       }
       cy.wrap(calendarIds).as("calendarIdsToDelete");
+    });
+  });
+
+  afterEach(() => {
+    cy.fixture("calendars.fixture").then(function (config: any) {
+      const { virtualCalendarGrantId: grantId } = config;
+      cy.getCalendars({
+        grantId,
+      });
+
+      cy.get("@apiResponse").then((res: any) => {
+        const calendars = res.body.data;
+
+        for (const calendar of calendars) {
+          cy.deleteCalendar({
+            grantId,
+            calendarId: calendar.id,
+          });
+        }
+      });
     });
   });
   it("should fail when I try to create the 11th calendar", function () {

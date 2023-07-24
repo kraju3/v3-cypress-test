@@ -122,8 +122,8 @@ describe("Send - Google E2E Test", () => {
         cy.wrap(message.attachments)
           .as("attachments")
           .each((attachment: any) => {
-            assert.isDefined(attachment.content_id);
-            assert.isTrue(attachment.content_id !== "");
+            assert.isDefined(attachment.id);
+            assert.isTrue(attachment.id !== "");
           });
       });
     });

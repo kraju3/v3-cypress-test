@@ -169,7 +169,7 @@ describe("Event - Google Timespan Event E2E test", () => {
    * @description this contains the test of creating, deleting and updating Google Meets event
    *            and also validate whether the values change over the participants calendar
    */
-  describe.only("Events - Google Auto Conference Tests", () => {
+  describe("Events - Google Auto Conference Tests", () => {
     beforeEach("Create a Google timespan event", function () {
       cy.evenTestBeforeEach({
         payload: {
