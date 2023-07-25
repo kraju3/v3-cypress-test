@@ -108,13 +108,13 @@ describe("Send - Microsoft E2E Test", () => {
       //check the get call
       checkMessage("apiResponse", (response) => {
         const message = response.body.data[0];
-        assert.isDefined(message.files);
+        assert.isDefined(message.attachments);
 
-        cy.wrap(message.files)
+        cy.wrap(message.attachments)
           .as("attachments")
           .each((attachment: any) => {
-            assert.isDefined(attachment.content_id);
-            assert.isTrue(attachment.content_id !== "");
+            assert.isDefined(attachment.id);
+            assert.isTrue(attachment.id !== "");
           });
       });
     });
