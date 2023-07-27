@@ -1,5 +1,4 @@
 import { faker } from "@faker-js/faker";
-import { P } from "pino";
 import type { ICommonRequestFields } from "support/utils";
 
 let calendarKey: ICommonRequestFields["calendarKey"] = "virtualCalendar";

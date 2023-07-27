@@ -71,8 +71,9 @@ describe("Calendar - Google E2E tests", () => {
 
     cy.get("@apiResponse").then(function (response: any) {
       const event = response.body.data;
-      assert.isTrue(
-        encodeURIComponent(calendar.id) === event.calendar_id,
+      assert.equal(
+        event.calendar_id,
+        calendar.id,
         `The calendar id match\n Expected:${calendar.id}\n Returned:${event.calendar_id}`
       );
     });
